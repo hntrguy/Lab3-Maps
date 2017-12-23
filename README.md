@@ -106,7 +106,7 @@ cout << endl;
 ```
 If	you	run	this	code	using	1Nephi.txt as	input,	you	should	get	something	like:
 
-> I and endure to the last day And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it 
+> I, Nephi, make an end; for I and endure to the last day. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus 
 
 #### Output: 
 Print the sermon/poem/story/speech you generated to the terminal.
