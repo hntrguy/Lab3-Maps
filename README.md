@@ -106,7 +106,7 @@ cout << endl;
 ```
 If	you	run	this	code	using	1Nephi.txt as	input,	you	should	get	something	like:
 
-> I, Nephi, make an end; for I and endure to the last day. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus it is. Amen. And thus 
+> I and endure to the last day And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it is Amen And thus it
 
 #### Output: 
 Print the sermon/poem/story/speech you generated to the terminal.
@@ -153,7 +153,7 @@ sermon with this code:
 ``` c++
 srand(time(NULL)); // this line initializes the random number generated
                    // so you dont get the same thing every time
-string state = "";
+state = "";
 for (int i = 0; i < 100; i++) {
   int ind = rand() % wordmap[state].size();
   cout << wordmap[state][ind] << " ";
@@ -164,7 +164,7 @@ cout << endl;
 
 The generated text now sounds a lot more readable and doesn't get stuck in an infinite loop.
 Here’s sample output.
-> I was desirous to their hearts insomuch that I might not occupy these things he thinketh that they smite two churches for me saying Hosanna to stir them saying In and account of singing O man like unto him or of his life of my father saw and kingdoms And it proceeded forth my people who need not hunger nor touch me a man descending out from the Gentiles who were driven him out of Laban And now my mother of the land unto their abominations and Joseph And it came to pass that I saw in the nations kindreds
+> I had complained against the children of my father yea he hath done and he should never had spoken and made unto thy life was truly spake unto the Lord and he loveth his life Therefore remember the wilderness and he spake unto ripeness and power of the world And I looked and people And it came to and their journeying they were delivered him that they did speak many years in the remnant of a large and a church and judgments of the waters for they shall turn their fathers in other book hath also be glorified Then I
 
 #### Output: 
 Print the sermon/poem/story/speech you generated to the terminal.
@@ -177,16 +177,18 @@ words) for “having”. To do this, we just change the key for the map to be a 
 move through the text, we can push words onto the back of the list and pop words off the front of
 the list to continually get a context of M words. Here’s the code:
 ``` c++
-map<list<string>, vector<string>> wordmap;
-list<string> state;
-for (int i = 0; i < M; i++) {
-  state.push_back("");
-                      
-for (list<string>::iterator it=lst.begin(); it!=lst.end(); it++) {
-  wordmap[state].push_back(*it);
-  state.push_back(*it);
-  state.pop_front();
-}
+  int M=2;
+  map<list<string>, vector<string>> wordmap;
+  list<string> state;
+  for (int i = 0; i < M; i++) {
+    state.push_back("");
+  }
+                        
+  for (list<string>::iterator it=lst.begin(); it!=lst.end(); it++) {
+    wordmap[state].push_back(*it);
+    state.push_back(*it);
+    state.pop_front();
+  }
 ```
 *Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
 you!*
@@ -194,20 +196,21 @@ you!*
 We can then generate a new sermon from the resulting map with this code:
 
 ``` c++
-list<string> state;
-for (int i = 0; i < M; i++) {
-  state.push_back("");
-}
-for (int i = 0; i < M; i++) {
-  int ind = rand() % wordmap[state].size();
-  cout << wordmap[state][ind]<<" ";
-  state.push_back([wordmap[state][ind]);
-  state.pop_front();
-}
+  state.clear();
+  for (int i = 0; i < M; i++) {
+    state.push_back("");
+  }
+  for (int i = 0; i < 100; i++) {
+    int ind = rand() % wordmap[state].size();
+    cout << wordmap[state][ind]<<" ";
+    state.push_back(wordmap[state][ind]);
+    state.pop_front();
+  }
 ```
 The texts that is generated now sound much more like English (though admittedly, it ain’t perfect).
 Here’s a sample 100-word sermon that I generated for M=2:
-> I Nephi did make a full account of my brethren who were scattered upon all the words of Isaiah who spacke concerning the restoration of the kings and the beauty thereof was exceedingly glad for she truly had mourned because of my father and also against God nevertheless ye know that I did make tools of the Lord therefore let us slay our father Abraham saying In thy seed shall be led away by the power of God was the word of the olivetree or the remnants of the devil which shall war among themselves and the ward and rumors
+
+> I Nephi have written are true and living God And it came to pass that Zoram did take me and were partaking of the Lord my brethren they were disputing one with another concerning the things which he hath spoken And it came to pass that the Lord hath protected my sons are no more for the Lord such as Great and marvelous are thy works O Lord according to the words of the Lamb of God wherefore thou shalt also behold a man among the children of men And we beheld the pointers which were many he said unto
 
 Note that, for some inputs, the above code might produce a “floating point exception” if somehow
 wordmap[state].size() is equal to zero. You could fix this by identifying when this is the case, and
