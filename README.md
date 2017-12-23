@@ -112,54 +112,118 @@ If	you	run	this	code	using	1Nephi.txt as	input,	you	should	get	something	like:
 Print the sermon/poem/story/speech you generated to the terminal.
 ### Part 5
 That	isn’t	very	cool,	because	we	get	stuck	in	a	loop since we	are	only	keeping	track	of	the	last	
-“next	word”	we’ve	seen	for	every	word.		We	can	do	better.		Let’s	keep	track	of	all of	the	words	
+“next	word”	we’ve	seen	for	every	word.		We	can	do	better.		Let’s	keep	track	of	*all* of	the	words	
 that	are	seen	after	a	word.		To	do	this,	let’s	change the map to be a map with strings as keys and
 vectors of strings as values. Thus, we’ll put each consecutive pair of words in the document into
 our map as we did before. But this time, we’ll keep track of each word that comes after a particular
 word. We can to this like this (make sure you understand how this works):
-Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
-you!
+
+``` c++
+map<string, vector<string>> wordmap;
+string state = "";
+for(list<string>::iterator it=lst.begin(); it !=lst.end(); it++) {
+  wordmap[state].push_back(*it);
+  state = *it;
+}
+```
+*Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
+you!*
+
 When I run this code, I get the following vector of strings associated with the Key “Nephi”:
-having, do, will, being, because, returned, said, and, crept, had, being, do, and, did, and,
-being, had, and, and, do, wherefore, after, Nevertheless, proceed, having, was, because,
-what, saw, also, beheld, beheld, beheld, beheld, saying, beheld, heard, am, had, was, spake,
-did, had, did, took, had, went, having, did, did, beheld, did, who, had, did, did, was, spake,
-said, said, did, did, began, began, did, received, did, have, did, had, said, declare, say, make
+
+> having, do, will, being, because, returned, said, and, crept, had, being, do, and, did, and,
+> being, had, and, and, do, wherefore, after, Nevertheless, proceed, having, was, because,
+> what, saw, also, beheld, beheld, beheld, beheld, saying, beheld, heard, am, had, was, spake,
+> did, had, did, took, had, went, having, did, did, beheld, did, who, had, did, did, was, spake,
+> said, said, did, did, began, began, did, received, did, have, did, had, said, declare, say, make
+
 You can check to see whether you get the same list (to do that, you’ll need to iterate over the
 keys in your map until you find “Nephi”, and then you can print out all the words in the vector
 (Value) associated with the Key “Nephi.”
-Output: To verify that you have created this correctly, print out the vector of words that
+
+#### Output: 
+To verify that you have created this correctly, print out the vector of words that
 correspond to the 6th entry in the map (accessed using an iterator).
+
 Now that you have created this map, you can generate a better sermon (than before) by
 generating words using this map. We do this by randomly picking a string from the vector of
 strings associated with the “key” (which is the last word spoken). I generated a 100-word
 sermon with this code:
+
+``` c++
+srand(time(NULL)); // this line initializes the random number generated
+                   // so you dont get the same thing every time
+string state = "";
+for (int i = 0; i < 100; i++) {
+  int ind = rand() % wordmap[state].size();
+  cout << wordmap[state][ind] << " ";
+  state = wordmap[state][ind];
+}
+cout << endl;
+```
+
 The generated text now sounds a lot more readable and doesn't get stuck in an infinite loop.
 Here’s sample output.
-Output: Print the sermon/poem/story/speech you generated to the terminal.
-Part 6
+> I was desirous to their hearts insomuch that I might not occupy these things he thinketh that they smite two churches for me saying Hosanna to stir them saying In and account of singing O man like unto him or of his life of my father saw and kingdoms And it proceeded forth my people who need not hunger nor touch me a man descending out from the Gentiles who were driven him out of Laban And now my mother of the land unto their abominations and Joseph And it came to pass that I saw in the nations kindreds
+
+#### Output: 
+Print the sermon/poem/story/speech you generated to the terminal.
+
+### Part 6
 But we are still only using one word to get “context” and the generated text still doesn't sound very
 good. We would really like to use a phrase as a key so that we can learn multiple word context. In
 other words, for the phrase: “I Nephi having”, we would like to have “I Nephi” be the key (two
 words) for “having”. To do this, we just change the key for the map to be a list of strings. As we 
 move through the text, we can push words onto the back of the list and pop words off the front of
 the list to continually get a context of M words. Here’s the code:
-Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
-you!
+``` c++
+map<list<string>, vector<string>> wordmap;
+list<string> state;
+for (int i = 0; i < M; i++) {
+  state.push_back("");
+                      
+for (list<string>::iterator it=lst.begin(); it!=lst.end(); it++) {
+  wordmap[state].push_back(*it);
+  state.push_back(*it);
+  state.pop_front();
+}
+```
+*Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
+you!*
+
 We can then generate a new sermon from the resulting map with this code:
+
+``` c++
+list<string> state;
+for (int i = 0; i < M; i++) {
+  state.push_back("");
+}
+for (int i = 0; i < M; i++) {
+  int ind = rand() % wordmap[state].size();
+  cout << wordmap[state][ind]<<" ";
+  state.push_back([wordmap[state][ind]);
+  state.pop_front();
+}
+```
 The texts that is generated now sound much more like English (though admittedly, it ain’t perfect).
 Here’s a sample 100-word sermon that I generated for M=2:
+> I Nephi did make a full account of my brethren who were scattered upon all the words of Isaiah who spacke concerning the restoration of the kings and the beauty thereof was exceedingly glad for she truly had mourned because of my father and also against God nevertheless ye know that I did make tools of the Lord therefore let us slay our father Abraham saying In thy seed shall be led away by the power of God was the word of the olivetree or the remnants of the devil which shall war among themselves and the ward and rumors
+
 Note that, for some inputs, the above code might produce a “floating point exception” if somehow
 wordmap[state].size() is equal to zero. You could fix this by identifying when this is the case, and
 then resetting the state to its initial value (obtained in lines 2-3 of the previous snippet of code).
-Output: Print the sermon/poem/story/speech you generated to the terminal.
-Part 7
+
+#### Output: 
+Print the sermon/poem/story/speech you generated to the terminal.
+
+### Part 7
 Do something creative to try to improve your algorithm, or experiment with different texts.
 Trump.txt and Nephi_Trump.txt are provided, but you could find cooler ones. For example, you
 could collect a bunch of poems by Robert Frost into a .txt file, and then run your algorithm to see
-what kinds of poems you could generate. When you pass off the code, tell the TA what you did.
-Summary for Handing in the Code
-The code you submit on learning suite should run through parts 1-6 in order for any input file, and
+what kinds of poems you could generate. When you submit the code to Canvas, include a discussion of what you did.
+
+# Summary for Handing in the Code
+You should submit your c9.io user id on Canvas so that the TA can run through parts 1-6 in order for any input file, and
 produce the expected output.
-Questions
-This is a new lab, so if you have questions, please voice them so that we can clarify for you.
+
+
