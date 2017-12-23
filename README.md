@@ -4,15 +4,18 @@ Maps and Sets
 ## Purpose
 The purpose of this lab is to have some fun and maybe to also learn a little bit about how to use
 implementations of lists, sets, and maps in C++’s standard libraries.
+
 ## Required Knowledge
 In order to understand the solutions to this lab, you should become familiar with lists, sets, and
 maps, and be able to use the the implementations of these data structures provide in C++’s standard
 library. You should also be able to read and write to a file.
+
 ## Overview
 Machine learning has become increasingly popular in Computer Science. To state things perhaps
 too simply, in machine learning, a training set is used to determine the probability that an event
 occurs given a set of inputs. In this lab, you will train a map on the words from a document and
 then produce text that has the same distribution of words as the original document.
+
 ## Scoring
 The lab will be scored as follows:
 1. (14 points) Read the document into a set of strings and print them to a file.
@@ -31,50 +34,81 @@ than a you-figure-out-the-code lab. We’ll walk you through each step. To ensur
 from this style of lab, make sure you understand the code you write. Once you have finished, zip
 up your code, and submit it. Note, you must go in and pass this lab off with the TAs in person.
 The rest of the document walks you through each of the steps.
+
 ### Part 1
 Write a program that takes as input a command-line argument that specifies the name of a text file.
 If you are reading in 1Nephi.txt, the input should be “1Nephi”. Read the file and store each word
 of the file into a set (remove all punctuation – you may find the “isalpha” function to be helpful
 for this). 
-Output: Print the contents of the set to a new file with each string in the set appearing on a new
+
+#### Output: 
+Print the contents of the set to a new file with each string in the set appearing on a new
 line. The file 1Nephi.txt provides a good input file for you to test your code on. Unless I’ve done
 this incorrectly (which is possible), your output file should have close to 1690 words in it (your
 word count may vary somewhat depending on how you deal with hyphens). The name of the file
 should be “[filename]_set.txt”, where [filename] is the command-line input supplied by the “user.”
-#### Part 2
+
+### Part 2
 Add to your program a function that reads the file (specified from the command-line) and stores
 each word of the file into a vector. (remove all punctuation – you may find the “isalpha” function
 to be helpful for this).
-Output: Print the contents of the vector to a new file with each string in the vector appearing on a
+
+#### Output: 
+Print the contents of the vector to a new file with each string in the vector appearing on a
 new line. The file 1Nephi.txt provides a good input file for you to test your code on. Unless I’ve
 done this incorrectly (which is possible), your output file will have close to 25,106 words in it
 (your word count may vary somewhat depending on how you deal with hyphens). The name of
 the file should be “[filename]_vector.txt”, where [filename] is the command-line input supplied
 by the “user.”
-Insight: You should know why there are more words in the vector than in the set. If you don’t
-know, find out why.
-Part 3
+
+#### Insight: 
+You should know why there are more words in the vector than in the set. If you don’t know, find out why.
+
+### Part 3
 Next, let’s do something with your vector of strings. You’ll create a map of strings to string. To
 do this, for each string in your vector of strings (except the last string), create an entry in your map
 that has the string as the key, and the next word in the vector as the value. For example, for the
 phrase “having been born of goodly parents”, you would add the entries (key=”having”,
 value=”been”), (key=”been”, value=”born”), (key=”born”, value=”of”), etc. Here is a snippet of
 code that does this (make sure you understand it):
-Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
-you!
+``` c++
+map<string, string> wordmap;
+string last="";
+for (list<string>::iterator it=lst.begin(); it!=lst.end(); it++) {
+  wordmap[last]=*it;
+  last = *it;
+}
+```
+*Note that lst is the list of strings created in part 2 (I used a list instead of a vector just to confuse
+you!*
+
 Notice that our first entry that we put into wordmap has an empty string as the key, and the first
 word as the value.
-Output: Print out the map to a file named the file [filename]_1_1.txt. So, if the second commandline
+
+#### Output: 
+Print out the map to a file named the file [filename]_1_1.txt. So, if the second commandline
 argument specifying the input file is “1Nephi”, your output file should be called 
 “1Nephi_1_1.txt”. On each line of the file, output the key a comma and space “, “, and then the
 value.
-Part 4
+
+### Part 4
 Next, let’s do something with your map. Your map has “learned” the contents for each word in
 the document. We want to generate new text using this context. You can generate 100 words of
 text as follows (make sure you understand how this works):
+
+``` c++
+string state = "";
+for(int i = 0; i < 100; i++){
+  cout << wordmap[state] << " ";
+  state = wordmap[state];
+}
+cout << endl;
+```
 If	you	run	this	code	using	1Nephi.txt as	input,	you	should	get	something	like:
-Output: Print the sermon/poem/story/speech you generated to the terminal.
-Part 5
+
+#### Output: 
+Print the sermon/poem/story/speech you generated to the terminal.
+### Part 5
 That	isn’t	very	cool,	because	we	get	stuck	in	a	loop since we	are	only	keeping	track	of	the	last	
 “next	word”	we’ve	seen	for	every	word.		We	can	do	better.		Let’s	keep	track	of	all of	the	words	
 that	are	seen	after	a	word.		To	do	this,	let’s	change the map to be a map with strings as keys and
